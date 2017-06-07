@@ -1,4 +1,4 @@
-CFLAGS = -g -Wall -Wextra -O3
+CFLAGS = -g -Wall -Wextra -O3 -std=gnu11
 LDFLAGS = -lSDL -lSDL_image -lSDL_ttf -lGL -lGLU
 
 SRC = $(wildcard src/*.c)
