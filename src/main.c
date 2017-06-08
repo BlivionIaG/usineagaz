@@ -27,8 +27,8 @@ int main(int argc, char **argv) {
   gui *interface =
       gui_init(terrain->w * CASE_SIZE, terrain->h * CASE_SIZE, 192, 192, 192);
 
-  while (!jean_claude->finished) {
-    gui_eventGesture(interface, &(jean_claude->finished));
+  while (!interface->finished) {
+    gui_eventGesture(interface);
     gui_draw(interface, jean_claude, terrain);
     gui_wait(interface, PRGM_DELAY);
 
@@ -36,10 +36,15 @@ int main(int argc, char **argv) {
       while (!jean_claude->finished) {
         bot_move(terrain, jean_claude);
       }
+      bot_move(terrain, jean_claude);
+    } else {
+      if (interface->allow_bot_moves) {
+        bot_move(terrain, jean_claude);
+      }
     }
   }
-
   interface->allow_bot_moves = 0;
+
   gui_draw(interface, jean_claude, terrain);
   gui_pause();
 

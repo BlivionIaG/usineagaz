@@ -24,23 +24,25 @@ gui *gui_init(int w, int h, int r, int g, int b) {
   out->last_time = SDL_GetTicks();
   out->allow_bot_moves = 0;
   out->fast = 0;
+  out->debug = 0;
+  out->finished = 0;
 
   return out;
 }
 
-void gui_eventGesture(gui *in, int *finished) {
+void gui_eventGesture(gui *in) {
   SDL_Event event;
 
   in->start_time = SDL_GetTicks();
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
       case SDL_QUIT:
-        *finished = 1;
+        in->finished = 1;
         break;
       case SDL_KEYDOWN:
         switch (event.key.keysym.sym) {
           case 'q':
-            *finished = 1;
+            in->finished = 1;
             break;
           case 'p':
             in->allow_bot_moves = 0;
@@ -48,8 +50,15 @@ void gui_eventGesture(gui *in, int *finished) {
           case 's':
             in->allow_bot_moves = 1;
             break;
-          case 'k':
+          case 'f':
             in->fast = 1;
+            break;
+          case 'd':
+            if (in->debug) {
+              in->debug = 0;
+            } else {
+              in->debug = 1;
+            }
             break;
           default:
             break;
@@ -67,7 +76,11 @@ void gui_eventGesture(gui *in, int *finished) {
 void gui_draw(gui *in, bot *dude, map *flat) {
   SDL_BlitSurface(in->background, NULL, in->screen, NULL);
   map_draw(in->screen, flat);
-  bot_draw(in->screen, dude);
+  if (in->debug) {
+    bot_debugDraw(in->screen, dude);
+  } else {
+    bot_draw(in->screen, dude);
+  }
   SDL_Flip(in->screen);
   if (in->allow_bot_moves) {
     bot_move(flat, dude);

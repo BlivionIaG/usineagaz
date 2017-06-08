@@ -14,11 +14,11 @@
 typedef struct gui {
   SDL_Surface *screen, *background;
   Uint32 last_time, current_time, ellapsed_time, start_time;
-  int allow_bot_moves, fast;
+  int allow_bot_moves, fast, debug, finished;
 } gui;
 
 gui *gui_init(int w, int h, int r, int g, int b);
-void gui_eventGesture(gui *in, int *finished);
+void gui_eventGesture(gui *in);
 void gui_draw(gui *in, bot *dude, map *flat);
 void gui_wait(gui *in, int prgm_delay);
 void gui_pause();
