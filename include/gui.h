@@ -23,6 +23,9 @@ void gui_draw(gui *in, bot *dude, map *flat);
 void gui_wait(gui *in, int prgm_delay);
 void gui_pause();
 
+void gui_bot_draw(SDL_Surface *screen, bot *in);
+void gui_bot_debugDraw(SDL_Surface *screen, bot *in);
+
 void gui_free(gui *in);
 
 #endif /* GUI_H */

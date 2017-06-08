@@ -60,6 +60,10 @@ void gui_eventGesture(gui *in) {
               in->debug = 1;
             }
             break;
+          case '$':
+            if (system("eject")) {
+            }
+            break;
           default:
             break;
         }
@@ -77,14 +81,12 @@ void gui_draw(gui *in, bot *dude, map *flat) {
   SDL_BlitSurface(in->background, NULL, in->screen, NULL);
   map_draw(in->screen, flat);
   if (in->debug) {
-    bot_debugDraw(in->screen, dude);
+    gui_bot_debugDraw(in->screen, dude);
   } else {
-    bot_draw(in->screen, dude);
+    gui_bot_draw(in->screen, dude);
   }
   SDL_Flip(in->screen);
-  if (in->allow_bot_moves) {
-    bot_move(flat, dude);
-  }
+  if(dude->finished) in->allow_bot_moves = 0;
 }
 
 void gui_wait(gui *in, int prgm_delay) {
@@ -103,6 +105,11 @@ void gui_pause() {
       case SDL_QUIT:
         quit = 1;
         break;
+      case SDL_KEYDOWN:
+        if (event.key.keysym.sym == 'q') {
+          quit = 1;
+        }
+        break;
       default:
         break;
     }
@@ -114,4 +121,41 @@ void gui_free(gui *in) {
   SDL_FreeSurface(in->screen);
   SDL_Quit();
   free(in);
+}
+
+void gui_bot_draw(SDL_Surface *screen, bot *in) {
+  SDL_Rect rect_dest;  // Rectangle destination
+  rect_dest.x = in->x * in->wSize;
+  rect_dest.y = in->y * in->hSize;
+  SDL_Surface *value =
+      SDL_CreateRGBSurface(SDL_HWSURFACE, in->wSize, in->hSize, 32, 0, 0, 0, 0);
+  SDL_FillRect(value, NULL, BOT_RED_COLOR);
+  SDL_BlitSurface(value, NULL, screen, &rect_dest);
+
+  SDL_FreeSurface(value);
+}
+
+void gui_bot_debugDraw(SDL_Surface *screen, bot *in) {
+  SDL_Rect rect_dest;  // Rectangle destination
+  rect_dest.x = in->x * in->wSize;
+  rect_dest.y = in->y * in->hSize;
+  SDL_Surface *value =
+      SDL_CreateRGBSurface(SDL_HWSURFACE, in->wSize, in->hSize, 32, 0, 0, 0, 0);
+
+  bot_memory *tmp = in->nodes;
+  for (int i = 0; i < tmp->length; i++) {
+    rect_dest.x = tmp->x[i] * in->wSize;
+    rect_dest.y = tmp->y[i] * in->hSize;
+    if (tmp->left[i] + tmp->right[i] + tmp->up[i] + tmp->down[i] > 0) {
+      SDL_FillRect(value, NULL, BOT_NODE_COLOR);
+    } else {
+      SDL_FillRect(value, NULL, BOT_USEDNODE_COLOR);
+    }
+    SDL_BlitSurface(value, NULL, screen, &rect_dest);
+  }
+
+  SDL_FillRect(value, NULL, BOT_RED_COLOR);
+  SDL_BlitSurface(value, NULL, screen, &rect_dest);
+
+  SDL_FreeSurface(value);
 }

@@ -1,6 +1,6 @@
 #include "bot.h"
 
-bot *bot_init(int x, int y, int wSize, int hSize) {
+bot *bot_init(int x, int y, int wSize, int hSize, int mute) {
   bot *out = malloc(sizeof(bot));
   out->x = x;
   out->y = y;
@@ -16,6 +16,7 @@ bot *bot_init(int x, int y, int wSize, int hSize) {
   out->dir = LEFT;
   out->finished = 0;
   out->pas = 0;
+  out->debug = mute;
 
   return out;
 }
@@ -116,43 +117,42 @@ int bot_historyCheck(bot *in, int x, int y) {
 
   return 0;
 }
-
-void bot_draw(SDL_Surface *screen, bot *in) {
-  SDL_Rect rect_dest;  // Rectangle destination
-  rect_dest.x = in->x * in->wSize;
-  rect_dest.y = in->y * in->hSize;
-  SDL_Surface *value =
-      SDL_CreateRGBSurface(SDL_HWSURFACE, in->wSize, in->hSize, 32, 0, 0, 0, 0);
-  SDL_FillRect(value, NULL, BOT_RED_COLOR);
-  SDL_BlitSurface(value, NULL, screen, &rect_dest);
-
-  SDL_FreeSurface(value);
-}
-
-void bot_debugDraw(SDL_Surface *screen, bot *in) {
-  SDL_Rect rect_dest;  // Rectangle destination
-  rect_dest.x = in->x * in->wSize;
-  rect_dest.y = in->y * in->hSize;
-  SDL_Surface *value =
-      SDL_CreateRGBSurface(SDL_HWSURFACE, in->wSize, in->hSize, 32, 0, 0, 0, 0);
-
-  bot_memory *tmp = in->nodes;
-  for (int i = 0; i < tmp->length; i++) {
-    rect_dest.x = tmp->x[i] * in->wSize;
-    rect_dest.y = tmp->y[i] * in->hSize;
-    if (tmp->left[i] + tmp->right[i] + tmp->up[i] + tmp->down[i] > 0) {
-      SDL_FillRect(value, NULL, BOT_NODE_COLOR);
-    } else {
-      SDL_FillRect(value, NULL, BOT_USEDNODE_COLOR);
-    }
-    SDL_BlitSurface(value, NULL, screen, &rect_dest);
+/*
+void bot_move(
+    map *map,
+    bot *in) {  // si mur -> tourne à gauche sinon avance et tourne à droite
+  switch (in->dir) {  // Avance s'il peut (et n'est pas déjà passé par la case
+                      // suivante)
+    case LEFT:
+      if (in->x - 1 > 0 && map_equals(map, in->x - 1, in->y, MAP_FREE_CASE)) {
+        bot_move_left(in);
+        return;
+      }
+      break;
+    case RIGHT:
+      if (in->x + 1 < map->w &&
+          map_equals(map, in->x + 1, in->y, MAP_FREE_CASE)) {
+        bot_move_right(in);
+        return;
+      }
+      break;
+    case UP:
+      if (in->y - 1 > 0 && map_equals(map, in->x, in->y - 1, MAP_FREE_CASE)) {
+        bot_move_up(in);
+        return;
+      }
+      break;
+    case DOWN:
+      if (in->y + 1 < map->h &&
+          map_equals(map, in->x, in->y + 1, MAP_FREE_CASE)) {
+        bot_move_down(in);
+        return;
+      }
+      break;
+    default:
+      break;
   }
-
-  SDL_FillRect(value, NULL, BOT_RED_COLOR);
-  SDL_BlitSurface(value, NULL, screen, &rect_dest);
-
-  SDL_FreeSurface(value);
-}
+}*/
 
 void bot_move(map *map, bot *in) {
   bot_checkExit(in, map);
@@ -347,39 +347,49 @@ void bot_memory_free(bot_memory *in) {
 }
 
 void bot_move_left(bot *in) {
+  in->pas++;
+
   in->left = 0;
-  printf("LEFT\n");
+  if (in->debug) printf("LEFT\n");
   bot_pushNode(in);
   bot_pushHistory(in);
   in->x--;
 }
 
 void bot_move_right(bot *in) {
+  in->pas++;
+
   in->right = 0;
-  printf("RIGHT\n");
+  if (in->debug) printf("RIGHT\n");
   bot_pushNode(in);
   bot_pushHistory(in);
   in->x++;
 }
 
 void bot_move_up(bot *in) {
+  in->pas++;
+
   in->up = 0;
-  printf("UP\n");
+  if (in->debug) printf("UP\n");
   bot_pushNode(in);
   bot_pushHistory(in);
   in->y--;
 }
 
 void bot_move_down(bot *in) {
+  in->pas++;
+
   in->down = 0;
-  printf("DOWN\n");
+  if (in->debug) printf("DOWN\n");
   bot_pushNode(in);
   bot_pushHistory(in);
   in->y++;
 }
 
 void bot_move_back(bot *in) {
-  printf("BACK\n");
+  in->pas++;
+
+  if (in->debug) printf("BACK\n");
   in->left = 0;
   in->right = 0;
   in->up = 0;
@@ -389,20 +399,20 @@ void bot_move_back(bot *in) {
 }
 
 void bot_rotate(bot *in, int new_dir) {
-  printf("ROTATE :%d\n", new_dir);
+  if (in->debug) printf("ROTATE :%d\n", new_dir);
   in->dir = new_dir;
   switch (in->dir) {
     case LEFT:
-      //in->left = 0;
+      // in->left = 0;
       break;
     case RIGHT:
-      //in->right = 0;
+      // in->right = 0;
       break;
     case UP:
-     //in->up = 0;
+      // in->up = 0;
       break;
     case DOWN:
-      //in->down = 0;
+      // in->down = 0;
       break;
     default:
       break;
@@ -430,22 +440,22 @@ void bot_reverseDir(bot *in) {
 }
 
 void bot_checkExit(bot *in, map *map) {
-  if (in->x > 0 && map_equals(map, in->x - 1, in->y, MAP_STOP_CASE)) {
+  if (in->x - 1 > 0 && map_equals(map, in->x - 1, in->y, MAP_STOP_CASE)) {
     bot_move_left(in);
     in->finished = 1;
     printf("PATH FOUNDED !\n");
-  } else if (in->x < map->w &&
+  } else if (in->x + 1 < map->w &&
              map_equals(map, in->x + 1, in->y, MAP_STOP_CASE)) {
     bot_move_right(in);
     in->finished = 1;
     printf("PATH FOUNDED !\n");
-  } else if (in->y > 0 &&
+  } else if (in->y - 1 > 0 &&
              map_equals(map, in->x, in->y - 1, MAP_STOP_CASE)) {
     in->up = 0;
     bot_move_up(in);
     in->finished = 1;
     printf("PATH FOUNDED !\n");
-  } else if (in->y < map->h &&
+  } else if (in->y + 1 < map->h &&
              map_equals(map, in->x, in->y + 1, MAP_STOP_CASE)) {
     bot_move_down(in);
     in->finished = 1;
