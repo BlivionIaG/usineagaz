@@ -393,16 +393,16 @@ void bot_rotate(bot *in, int new_dir) {
   in->dir = new_dir;
   switch (in->dir) {
     case LEFT:
-      in->left = 0;
+      //in->left = 0;
       break;
     case RIGHT:
-      in->right = 0;
+      //in->right = 0;
       break;
     case UP:
-      in->up = 0;
+     //in->up = 0;
       break;
     case DOWN:
-      in->down = 0;
+      //in->down = 0;
       break;
     default:
       break;
@@ -430,22 +430,22 @@ void bot_reverseDir(bot *in) {
 }
 
 void bot_checkExit(bot *in, map *map) {
-  if (in->x - 1 > 0 && map_equals(map, in->x - 1, in->y, MAP_STOP_CASE)) {
+  if (in->x > 0 && map_equals(map, in->x - 1, in->y, MAP_STOP_CASE)) {
     bot_move_left(in);
     in->finished = 1;
     printf("PATH FOUNDED !\n");
-  } else if (in->x + 1 < map->w &&
+  } else if (in->x < map->w &&
              map_equals(map, in->x + 1, in->y, MAP_STOP_CASE)) {
     bot_move_right(in);
     in->finished = 1;
     printf("PATH FOUNDED !\n");
-  } else if (in->y - 1 > 0 &&
+  } else if (in->y > 0 &&
              map_equals(map, in->x, in->y - 1, MAP_STOP_CASE)) {
     in->up = 0;
     bot_move_up(in);
     in->finished = 1;
     printf("PATH FOUNDED !\n");
-  } else if (in->y + 1 < map->h &&
+  } else if (in->y < map->h &&
              map_equals(map, in->x, in->y + 1, MAP_STOP_CASE)) {
     bot_move_down(in);
     in->finished = 1;
