@@ -3,10 +3,10 @@
 #include "map.h"
 #include "nogui.h"
 
-#define CASE_SIZE 10
+#define CASE_SIZE 16
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
-#define PRGM_DELAY 100
+#define PRGM_DELAY 0
 
 int main(int argc, char **argv) {
   int terminal_only = 0, gui_only = 0;
@@ -47,6 +47,12 @@ int main(int argc, char **argv) {
   if (!terminal_only) {  // Mode interface graphique
     gui *interface =
         gui_init(terrain->w * CASE_SIZE, terrain->h * CASE_SIZE, 192, 192, 192);
+    interface->wall = gui_loadSprite("ressources/wall.png");
+    interface->robot = gui_loadSprite("ressources/player.png");
+    interface->depart = gui_loadSprite("ressources/start.png");
+    interface->fin = gui_loadSprite("ressources/end.png");
+    interface->sol = gui_loadSprite("ressources/floor.png");
+
     int *allow_bot_moves = &(interface->allow_bot_moves);
 
     while (!interface->finished) {  // Tant que l'interface n'a pas terminée
@@ -80,13 +86,16 @@ int main(int argc, char **argv) {
 
   } else {
     while (!jean_claude->finished) {
-      bot_move(terrain, jean_claude);
+      bot_move_safe(terrain, jean_claude);
       nogui_bot_on_map_draw(jean_claude, terrain);
       usleep(PRGM_DELAY * 1000);
     }
   }
 
-  if (!gui_only) nogui_bot_on_map_draw(jean_claude, terrain);
+  if (!gui_only) {
+    nogui_bot_on_map_draw(jean_claude, terrain);
+    printf("PAS :%d\n", jean_claude->pas);
+  }
 
   map_free(terrain);
   bot_free(jean_claude);

@@ -17,6 +17,8 @@ bot *bot_init(int x, int y, int wSize, int hSize, int mute) {
   out->finished = 0;
   out->pas = 0;
   out->debug = mute;
+  out->on_wall = 0;
+  out->algorithm = 0;
 
   return out;
 }
@@ -117,218 +119,26 @@ int bot_historyCheck(bot *in, int x, int y) {
 
   return 0;
 }
-/*
-void bot_move(
-    map *map,
-    bot *in) {  // si mur -> tourne à gauche sinon avance et tourne à droite
-  switch (in->dir) {  // Avance s'il peut (et n'est pas déjà passé par la case
-                      // suivante)
+
+int bot_nextCase_nodesCheck(bot *in, int x, int y) {
+  switch (in->dir) {
     case LEFT:
-      if (in->x - 1 > 0 && map_equals(map, in->x - 1, in->y, MAP_FREE_CASE)) {
-        bot_move_left(in);
-        return;
-      }
+      return bot_memory_nodesCheck(in, x - 1, y);
       break;
     case RIGHT:
-      if (in->x + 1 < map->w &&
-          map_equals(map, in->x + 1, in->y, MAP_FREE_CASE)) {
-        bot_move_right(in);
-        return;
-      }
+      return bot_memory_nodesCheck(in, x + 1, y);
       break;
     case UP:
-      if (in->y - 1 > 0 && map_equals(map, in->x, in->y - 1, MAP_FREE_CASE)) {
-        bot_move_up(in);
-        return;
-      }
+      return bot_memory_nodesCheck(in, x, y - 1);
       break;
     case DOWN:
-      if (in->y + 1 < map->h &&
-          map_equals(map, in->x, in->y + 1, MAP_FREE_CASE)) {
-        bot_move_down(in);
-        return;
-      }
+      return bot_memory_nodesCheck(in, x, y + 1);
       break;
     default:
+      return 0;
       break;
   }
-}*/
-
-void bot_move(map *map, bot *in) {
-  bot_checkExit(in, map);
-  if (in->finished) return;
-
-  int pos = bot_memory_position(in->nodes, in->x, in->y);
-
-  if (pos < 0) {
-    in->left = 1;
-    in->right = 1;
-    in->up = 1;
-    in->down = 1;
-  } else {
-    bot_memory *tmp = in->nodes;
-    in->left = tmp->left[pos];
-    in->right = tmp->right[pos];
-    in->up = tmp->up[pos];
-    in->down = tmp->down[pos];
-  }
-
-  switch (in->dir) {  // Avance s'il peut (et n'est pas déjà passé par la case
-                      // suivante)
-    case LEFT:
-      if (in->x - 1 > 0 && map_equals(map, in->x - 1, in->y, MAP_FREE_CASE) &&
-          in->left) {
-        bot_move_left(in);
-        return;
-      } else {
-        in->left = 0;
-      }
-      break;
-    case RIGHT:
-      if (in->x + 1 < map->w &&
-          map_equals(map, in->x + 1, in->y, MAP_FREE_CASE) && in->right) {
-        bot_move_right(in);
-        return;
-      } else {
-        in->right = 0;
-      }
-      break;
-    case UP:
-      if (in->y - 1 > 0 && map_equals(map, in->x, in->y - 1, MAP_FREE_CASE) &&
-          in->up) {
-        bot_move_up(in);
-        return;
-      } else {
-        in->up = 0;
-      }
-      break;
-    case DOWN:
-      if (in->y + 1 < map->h &&
-          map_equals(map, in->x, in->y + 1, MAP_FREE_CASE) && in->down) {
-        bot_move_down(in);
-        return;
-      } else {
-        in->down = 0;
-      }
-      break;
-    default:
-      break;
-  }
-
-  if (in->left && !bot_memory_nodesCheck(in, in->x - 1, in->y)) {
-    bot_rotate(in, LEFT);
-    return;
-  } else if (in->right && !bot_memory_nodesCheck(in, in->x + 1, in->y)) {
-    bot_rotate(in, RIGHT);
-    return;
-  } else if (in->up && !bot_memory_nodesCheck(in, in->x, in->y - 1)) {
-    bot_rotate(in, UP);
-    return;
-  } else if (in->down && !bot_memory_nodesCheck(in, in->x, in->y + 1)) {
-    bot_rotate(in, DOWN);
-    return;
-  }
-
-  bot_move_back(in);
 }
-
-/*
-void bot_move(map *map, bot *in) {
-  int pos;
-  in->left = 0;
-  in->right = 0;
-  in->up = 0;
-  in->down = 0;
-
-  // Look for free cases
-  if (in->x - 1 > 0 && map_equals(map, in->x - 1, in->y, MAP_FREE_CASE) &&
-      !bot_historyCheck(in, in->x - 1, in->y))
-    in->left = 1;
-  if (in->x + 1 < map->w && map_equals(map, in->x + 1, in->y, MAP_FREE_CASE) &&
-      !bot_historyCheck(in, in->x + 1, in->y))
-    in->right = 1;
-  if (in->y - 1 > 0 && map_equals(map, in->x, in->y - 1, MAP_FREE_CASE) &&
-      !bot_historyCheck(in, in->x, in->y - 1))
-    in->up = 1;
-  if (in->y + 1 < map->h && map_equals(map, in->x, in->y + 1, MAP_FREE_CASE) &&
-      !bot_historyCheck(in, in->x, in->y + 1))
-    in->down = 1;
-
-  // Look for older choices
-  pos = bot_memory_position(in->nodes, in->x, in->y);
-  if (pos >= 0) {
-    bot_memory *tmp = in->nodes;
-    in->left = tmp->left[pos];
-    in->right = tmp->right[pos];
-    in->up = tmp->up[pos];
-    in->down = tmp->down[pos];
-  }
-
-  // Look for the end
-  if (in->x - 1 > 0 && map_equals(map, in->x - 1, in->y, MAP_STOP_CASE)) {
-    in->left = 0;
-    //printf("LEFT\n");
-    bot_pushNode(in);
-    bot_pushHistory(in);
-    in->x--;
-    in->finished = 1;
-  } else if (in->x + 1 < map->w &&
-             map_equals(map, in->x + 1, in->y, MAP_STOP_CASE)) {
-    in->right = 0;
-    //printf("RIGHT\n");
-    bot_pushNode(in);
-    bot_pushHistory(in);
-    in->x++;
-    in->finished = 1;
-  } else if (in->y - 1 > 0 &&
-             map_equals(map, in->x, in->y - 1, MAP_STOP_CASE)) {
-    in->up = 0;
-    //printf("UP\n");
-    bot_pushNode(in);
-    bot_pushHistory(in);
-    in->y--;
-    in->finished = 1;
-  } else if (in->y + 1 < map->h &&
-             map_equals(map, in->x, in->y + 1, MAP_STOP_CASE)) {
-    in->down = 0;
-    //printf("DOWN\n");
-    bot_pushNode(in);
-    bot_pushHistory(in);
-    in->y++;
-    in->finished = 1;
-  } else {
-    // MOVE
-    if (in->left) {
-      in->left = 0;
-      //printf("LEFT\n");
-      bot_pushNode(in);
-      bot_pushHistory(in);
-      in->x--;
-    } else if (in->right) {
-      in->right = 0;
-      //printf("RIGHT\n");
-      bot_pushNode(in);
-      bot_pushHistory(in);
-      in->x++;
-    } else if (in->up) {
-      in->up = 0;
-      //printf("UP\n");
-      bot_pushNode(in);
-      bot_pushHistory(in);
-      in->y--;
-    } else if (in->down) {
-      in->down = 0;
-      //printf("DOWN\n");
-      bot_pushNode(in);
-      bot_pushHistory(in);
-      in->y++;
-    } else {
-      //printf("BACK\n");
-      bot_pushNode(in);
-      bot_popHistory(in);
-    }
-  }
-}*/
 
 void bot_free(bot *in) {
   bot_memory_free(in->nodes);
@@ -346,93 +156,44 @@ void bot_memory_free(bot_memory *in) {
   free(in);
 }
 
-void bot_move_left(bot *in) {
-  in->pas++;
-
-  in->left = 0;
-  if (in->debug) printf("LEFT\n");
-  bot_pushNode(in);
-  bot_pushHistory(in);
-  in->x--;
-}
-
-void bot_move_right(bot *in) {
-  in->pas++;
-
-  in->right = 0;
-  if (in->debug) printf("RIGHT\n");
-  bot_pushNode(in);
-  bot_pushHistory(in);
-  in->x++;
-}
-
-void bot_move_up(bot *in) {
-  in->pas++;
-
-  in->up = 0;
-  if (in->debug) printf("UP\n");
-  bot_pushNode(in);
-  bot_pushHistory(in);
-  in->y--;
-}
-
-void bot_move_down(bot *in) {
-  in->pas++;
-
-  in->down = 0;
-  if (in->debug) printf("DOWN\n");
-  bot_pushNode(in);
-  bot_pushHistory(in);
-  in->y++;
-}
-
-void bot_move_back(bot *in) {
-  in->pas++;
-
-  if (in->debug) printf("BACK\n");
-  in->left = 0;
-  in->right = 0;
-  in->up = 0;
-  in->down = 0;
-  bot_pushNode(in);
-  bot_popHistory(in);
-}
-
 void bot_rotate(bot *in, int new_dir) {
   if (in->debug) printf("ROTATE :%d\n", new_dir);
   in->dir = new_dir;
+  bot_pushNode(in);
+}
+
+void bot_rotate_to_left(bot *in) {
   switch (in->dir) {
     case LEFT:
-      // in->left = 0;
+      in->dir = DOWN;
       break;
     case RIGHT:
-      // in->right = 0;
+      in->dir = UP;
       break;
     case UP:
-      // in->up = 0;
+      in->dir = LEFT;
       break;
     case DOWN:
-      // in->down = 0;
+      in->dir = RIGHT;
       break;
     default:
       break;
   }
-  bot_pushNode(in);
 }
 
-void bot_reverseDir(bot *in) {
+void bot_rotate_to_right(bot *in) {
   switch (in->dir) {
     case LEFT:
-      in->dir = RIGHT;
+      in->dir = UP;
       break;
     case RIGHT:
-      in->dir = LEFT;
-      break;
-    case UP:
       in->dir = DOWN;
       break;
+    case UP:
+      in->dir = RIGHT;
+      break;
     case DOWN:
-      in->dir = UP;
+      in->dir = LEFT;
       break;
     default:
       break;
@@ -440,25 +201,55 @@ void bot_reverseDir(bot *in) {
 }
 
 void bot_checkExit(bot *in, map *map) {
-  if (in->x - 1 > 0 && map_equals(map, in->x - 1, in->y, MAP_STOP_CASE)) {
+  if (in->x > 0 && map_equals(map, in->x - 1, in->y, MAP_STOP_CASE)) {
     bot_move_left(in);
     in->finished = 1;
-    printf("PATH FOUNDED !\n");
+    printf("PATH FOUND !\n");
   } else if (in->x + 1 < map->w &&
              map_equals(map, in->x + 1, in->y, MAP_STOP_CASE)) {
     bot_move_right(in);
     in->finished = 1;
-    printf("PATH FOUNDED !\n");
-  } else if (in->y - 1 > 0 &&
-             map_equals(map, in->x, in->y - 1, MAP_STOP_CASE)) {
+    printf("PATH FOUND !\n");
+  } else if (in->y > 0 && map_equals(map, in->x, in->y - 1, MAP_STOP_CASE)) {
     in->up = 0;
     bot_move_up(in);
     in->finished = 1;
-    printf("PATH FOUNDED !\n");
+    printf("PATH FOUND !\n");
   } else if (in->y + 1 < map->h &&
              map_equals(map, in->x, in->y + 1, MAP_STOP_CASE)) {
     bot_move_down(in);
     in->finished = 1;
-    printf("PATH FOUNDED !\n");
+    printf("PATH FOUND !\n");
   }
+}
+
+int bot_checkWall(bot *in, map *map) {
+  switch (in->dir) {  // Avance s'il peut (et n'est pas déjà passé par la case
+                      // suivante)
+    case LEFT:
+      if (in->x > 0 && map_equals(map, in->x - 1, in->y, MAP_WALL_CASE)) {
+        return 1;
+      }
+      break;
+    case RIGHT:
+      if (in->x + 1 < map->w &&
+          map_equals(map, in->x + 1, in->y, MAP_WALL_CASE)) {
+        return 1;
+      }
+      break;
+    case UP:
+      if (in->y > 0 && map_equals(map, in->x, in->y - 1, MAP_WALL_CASE)) {
+        return 1;
+      }
+      break;
+    case DOWN:
+      if (in->y + 1 < map->h &&
+          map_equals(map, in->x, in->y + 1, MAP_WALL_CASE)) {
+        return 1;
+      }
+      break;
+    default:
+      break;
+  }
+  return 0;
 }

@@ -1,7 +1,6 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include <SDL/SDL.h>  // -lSDL
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,7 +26,6 @@ typedef struct map {
 
 map *map_load(char *path, int size);
 void map_print(map *in);
-void map_draw(SDL_Surface *screen, map *mymap);
 
 extra_coords map_getEntry(map *in);
 extra_coords map_getExit(map *in);

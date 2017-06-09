@@ -19,14 +19,28 @@ gui *gui_init(int w, int h, int r, int g, int b) {
   out->background = SDL_CreateRGBSurface(SDL_HWSURFACE, (out->screen)->w,
                                          (out->screen)->h, 32, 0, 0, 0, 0);
   SDL_FillRect(out->background, NULL, RGB(out->screen, r, g, b));
+  out->wall = NULL;
+  out->robot = NULL;
+  out->sol = NULL;
+  out->depart = NULL;
+  out->fin = NULL;
 
-  SDL_EnableKeyRepeat(10, 10);
+  // SDL_EnableKeyRepeat(10, 10);
   out->last_time = SDL_GetTicks();
   out->allow_bot_moves = 0;
   out->fast = 0;
   out->debug = 0;
   out->finished = 0;
 
+  return out;
+}
+
+SDL_Surface *gui_loadSprite(char *path) {
+  SDL_Surface *out = IMG_Load(path);
+  if (out == NULL) {
+    fprintf(stderr, "Impossible de charger le fichier %s: %s\n", path,
+            SDL_GetError());
+  }
   return out;
 }
 
@@ -79,14 +93,14 @@ void gui_eventGesture(gui *in) {
 
 void gui_draw(gui *in, bot *dude, map *flat) {
   SDL_BlitSurface(in->background, NULL, in->screen, NULL);
-  map_draw(in->screen, flat);
+  gui_map_draw(in, flat);
   if (in->debug) {
-    gui_bot_debugDraw(in->screen, dude);
+    gui_bot_debugDraw(in, dude);
   } else {
-    gui_bot_draw(in->screen, dude);
+    gui_bot_draw(in, dude);
   }
   SDL_Flip(in->screen);
-  if(dude->finished) in->allow_bot_moves = 0;
+  if (dude->finished) in->allow_bot_moves = 0;
 }
 
 void gui_wait(gui *in, int prgm_delay) {
@@ -123,22 +137,29 @@ void gui_free(gui *in) {
   free(in);
 }
 
-void gui_bot_draw(SDL_Surface *screen, bot *in) {
+void gui_bot_draw(gui *gui, bot *in) {
   SDL_Rect rect_dest;  // Rectangle destination
   rect_dest.x = in->x * in->wSize;
   rect_dest.y = in->y * in->hSize;
-  SDL_Surface *value =
-      SDL_CreateRGBSurface(SDL_HWSURFACE, in->wSize, in->hSize, 32, 0, 0, 0, 0);
-  SDL_FillRect(value, NULL, BOT_RED_COLOR);
-  SDL_BlitSurface(value, NULL, screen, &rect_dest);
-
-  SDL_FreeSurface(value);
+  if (gui->robot != NULL) {
+    SDL_Rect rect_src;
+    // rect_src.x = (in->dir / NB_SPRITES_P_LINE) * in->wSize;
+    rect_src.x = (in->pas % 4) * in->wSize; // Il n'y a que 4 directions
+    rect_src.y = (in->dir % NB_SPRITES_P_LINE) * in->hSize;
+    rect_src.w = in->wSize;
+    rect_src.h = in->hSize;
+    SDL_BlitSurface(gui->robot, &rect_src, gui->screen, &rect_dest);
+  } else {
+    SDL_Surface *value = SDL_CreateRGBSurface(SDL_HWSURFACE, in->wSize,
+                                              in->hSize, 32, 0, 0, 0, 0);
+    SDL_FillRect(value, NULL, BOT_RED_COLOR);
+    SDL_BlitSurface(value, NULL, gui->screen, &rect_dest);
+    SDL_FreeSurface(value);
+  }
 }
 
-void gui_bot_debugDraw(SDL_Surface *screen, bot *in) {
+void gui_bot_debugDraw(gui *gui, bot *in) {
   SDL_Rect rect_dest;  // Rectangle destination
-  rect_dest.x = in->x * in->wSize;
-  rect_dest.y = in->y * in->hSize;
   SDL_Surface *value =
       SDL_CreateRGBSurface(SDL_HWSURFACE, in->wSize, in->hSize, 32, 0, 0, 0, 0);
 
@@ -151,11 +172,57 @@ void gui_bot_debugDraw(SDL_Surface *screen, bot *in) {
     } else {
       SDL_FillRect(value, NULL, BOT_USEDNODE_COLOR);
     }
-    SDL_BlitSurface(value, NULL, screen, &rect_dest);
+    SDL_BlitSurface(value, NULL, gui->screen, &rect_dest);
   }
 
+  rect_dest.x = in->x * in->wSize;
+  rect_dest.y = in->y * in->hSize;
   SDL_FillRect(value, NULL, BOT_RED_COLOR);
-  SDL_BlitSurface(value, NULL, screen, &rect_dest);
+  SDL_BlitSurface(value, NULL, gui->screen, &rect_dest);
+
+  SDL_FreeSurface(value);
+}
+
+void gui_map_draw(gui *gui, map *in) {
+  SDL_Surface *value =
+      SDL_CreateRGBSurface(SDL_HWSURFACE, in->size, in->size, 32, 0, 0, 0, 0);
+  SDL_Rect rect_dest;
+
+  for (int i = 0; i < in->h; i++) {
+    for (int j = 0; j < in->w; j++) {
+      rect_dest.x = j * in->size;
+      rect_dest.y = i * in->size;
+      switch (in->data[i][j]) {
+        case 'D':
+          SDL_FillRect(value, NULL, MAP_D_CASE_COLOR);
+          break;
+        case ' ':
+          SDL_FillRect(value, NULL, MAP_FREE_CASE_COLOR);
+          break;
+        case 'x':
+          SDL_FillRect(value, NULL, MAP_X_CASE_COLOR);
+          break;
+        case 'S':
+          SDL_FillRect(value, NULL, MAP_S_CASE_COLOR);
+          break;
+        default:
+          SDL_FillRect(value, NULL, MAP_UNKNOWN_CASE_COLOR);
+          break;
+      }
+
+      if (in->data[i][j] == 'x' && gui->wall != NULL) {
+        SDL_BlitSurface(gui->wall, NULL, gui->screen, &rect_dest);
+      } else if (in->data[i][j] == ' ' && gui->sol != NULL) {
+        SDL_BlitSurface(gui->sol, NULL, gui->screen, &rect_dest);
+      } else if (in->data[i][j] == 'D' && gui->depart != NULL) {
+        SDL_BlitSurface(gui->depart, NULL, gui->screen, &rect_dest);
+      } else if (in->data[i][j] == 'S' && gui->fin != NULL) {
+        SDL_BlitSurface(gui->fin, NULL, gui->screen, &rect_dest);
+      } else {
+        SDL_BlitSurface(value, NULL, gui->screen, &rect_dest);
+      }
+    }
+  }
 
   SDL_FreeSurface(value);
 }
