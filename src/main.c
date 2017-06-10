@@ -6,15 +6,14 @@
 #define CASE_SIZE 16
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
-#define PRGM_DELAY 0
+#define PRGM_DELAY 100
 
 int main(int argc, char **argv) {
   int terminal_only = 0, gui_only = 0;
   if (argc < 2) {
-    printf(
-        "USAGE : ./usine_a_gaz.bin map\n\tOR  ./usine_a_gaz.bin map "
-        "guioption\n "
-        "\t\t\t\tg = gui, t = nogui\n");
+    printf("USAGE : ./usine_a_gaz.bin map\n\tOR  ./usine_a_gaz.bin map "
+           "guioption\n "
+           "\t\t\t\tg = gui, t = nogui\n");
     return -1;
   }
 
@@ -44,7 +43,7 @@ int main(int argc, char **argv) {
   }
 
   /* Initialisation de l'interface graphique */
-  if (!terminal_only) {  // Mode interface graphique
+  if (!terminal_only) { // Mode interface graphique
     gui *interface =
         gui_init(terrain->w * CASE_SIZE, terrain->h * CASE_SIZE, 192, 192, 192);
     interface->wall = gui_loadSprite("ressources/wall.png");
@@ -52,20 +51,23 @@ int main(int argc, char **argv) {
     interface->depart = gui_loadSprite("ressources/start.png");
     interface->fin = gui_loadSprite("ressources/end.png");
     interface->sol = gui_loadSprite("ressources/floor.png");
+    interface->mouvement = gui_loadSounds("ressources/mouvement.wav");
+    interface->background_music = gui_loadMusic("ressources/bgmusic.mod");
+    interface->win = gui_loadMusic("ressources/win.mp3");
 
     int *allow_bot_moves = &(interface->allow_bot_moves);
 
-    while (!interface->finished) {  // Tant que l'interface n'a pas terminée
-      gui_eventGesture(interface);  // Gestion des évènements
+    while (!interface->finished) { // Tant que l'interface n'a pas terminée
+      gui_eventGesture(interface); // Gestion des évènements
       gui_draw(interface, jean_claude,
-               terrain);  // Affichage de l'interface et des éléments
+               terrain); // Affichage de l'interface et des éléments
 
-      if (*allow_bot_moves && !gui_only)  // Si on peut faire bouger les robots
-                                          // et on a le droit d'afficher dans le
-                                          // terminal
+      if (*allow_bot_moves && !gui_only) // Si on peut faire bouger les robots
+                                         // et on a le droit d'afficher dans le
+                                         // terminal
         nogui_bot_on_map_draw(jean_claude, terrain);
 
-      gui_wait(interface, PRGM_DELAY);  // On attend
+      gui_wait(interface, PRGM_DELAY); // On attend
 
       if (interface->fast) {
         while (!jean_claude->finished) {
@@ -75,6 +77,7 @@ int main(int argc, char **argv) {
       } else {
         if (interface->allow_bot_moves) {
           bot_move(terrain, jean_claude);
+          // gui_playMovement(interface, jean_claude);
         }
       }
     }

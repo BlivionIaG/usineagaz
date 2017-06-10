@@ -4,6 +4,15 @@ gui *gui_init(int w, int h, int r, int g, int b) {
   srand(time(NULL));
   gui *out = malloc(sizeof(gui));
 
+  if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) ==
+      -1) {
+    fprintf(stderr, "Impossible to init SDL Mixer%s\n", Mix_GetError());
+  }
+  Mix_AllocateChannels(GUI_MIXER_CHANNEL);
+  out->mouvement = NULL;
+  out->background_music = NULL;
+  out->win = NULL;
+
   out->screen = NULL;
   if (SDL_Init(SDL_INIT_VIDEO == -1)) {
     fprintf(stderr, "Impossible to init SDL %s\n :", SDL_GetError());
@@ -44,46 +53,74 @@ SDL_Surface *gui_loadSprite(char *path) {
   return out;
 }
 
+Mix_Chunk *gui_loadSounds(char *path) {
+  Mix_Chunk *out = Mix_LoadWAV(path);
+  if (out == NULL) {
+    printf("Impossible de charger le fichier %s\n", path);
+  }
+
+  return out;
+}
+
+Mix_Music *gui_loadMusic(char *path) {
+  Mix_Music *out = Mix_LoadMUS(path);
+  if (out == NULL) {
+    printf("Impossible de charger le fichier%s\n", path);
+  }
+  return out;
+}
+
+void gui_playMovement(gui *in, bot *bot) {
+  if (in->mouvement != NULL)
+    Mix_PlayChannel(bot->pas % 2, in->mouvement, 0);
+}
+
+void gui_launchBackgroundMusic(gui *in) {
+  if (in->background_music != NULL)
+    Mix_PlayMusic(in->background_music, -1);
+}
+
 void gui_eventGesture(gui *in) {
   SDL_Event event;
 
   in->start_time = SDL_GetTicks();
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
-      case SDL_QUIT:
+    case SDL_QUIT:
+      in->finished = 1;
+      break;
+    case SDL_KEYDOWN:
+      switch (event.key.keysym.sym) {
+      case 'q':
         in->finished = 1;
         break;
-      case SDL_KEYDOWN:
-        switch (event.key.keysym.sym) {
-          case 'q':
-            in->finished = 1;
-            break;
-          case 'p':
-            in->allow_bot_moves = 0;
-            break;
-          case 's':
-            in->allow_bot_moves = 1;
-            break;
-          case 'f':
-            in->fast = 1;
-            break;
-          case 'd':
-            if (in->debug) {
-              in->debug = 0;
-            } else {
-              in->debug = 1;
-            }
-            break;
-          case '$':
-            if (system("eject")) {
-            }
-            break;
-          default:
-            break;
+      case 'p':
+        in->allow_bot_moves = 0;
+        break;
+      case 's':
+        in->allow_bot_moves = 1;
+        gui_launchBackgroundMusic(in);
+        break;
+      case 'f':
+        in->fast = 1;
+        break;
+      case 'd':
+        if (in->debug) {
+          in->debug = 0;
+        } else {
+          in->debug = 1;
+        }
+        break;
+      case '$':
+        if (system("eject")) {
         }
         break;
       default:
         break;
+      }
+      break;
+    default:
+      break;
     }
   }
   in->current_time = SDL_GetTicks();
@@ -100,7 +137,8 @@ void gui_draw(gui *in, bot *dude, map *flat) {
     gui_bot_draw(in, dude);
   }
   SDL_Flip(in->screen);
-  if (dude->finished) in->allow_bot_moves = 0;
+  if (dude->finished)
+    in->allow_bot_moves = 0;
 }
 
 void gui_wait(gui *in, int prgm_delay) {
@@ -116,16 +154,16 @@ void gui_pause() {
   while (!quit) {
     SDL_WaitEvent(&event);
     switch (event.type) {
-      case SDL_QUIT:
+    case SDL_QUIT:
+      quit = 1;
+      break;
+    case SDL_KEYDOWN:
+      if (event.key.keysym.sym == 'q') {
         quit = 1;
-        break;
-      case SDL_KEYDOWN:
-        if (event.key.keysym.sym == 'q') {
-          quit = 1;
-        }
-        break;
-      default:
-        break;
+      }
+      break;
+    default:
+      break;
     }
   }
 }
@@ -133,12 +171,22 @@ void gui_pause() {
 void gui_free(gui *in) {
   SDL_FreeSurface(in->background);
   SDL_FreeSurface(in->screen);
+  SDL_FreeSurface(in->sol);
+  SDL_FreeSurface(in->wall);
+  SDL_FreeSurface(in->depart);
+  SDL_FreeSurface(in->robot);
+  SDL_FreeSurface(in->fin);
+  Mix_FreeChunk(in->mouvement);
+  Mix_FreeMusic(in->win);
+  Mix_FreeMusic(in->background_music);
+
+  Mix_CloseAudio();
   SDL_Quit();
   free(in);
 }
 
 void gui_bot_draw(gui *gui, bot *in) {
-  SDL_Rect rect_dest;  // Rectangle destination
+  SDL_Rect rect_dest; // Rectangle destination
   rect_dest.x = in->x * in->wSize;
   rect_dest.y = in->y * in->hSize;
   if (gui->robot != NULL) {
@@ -159,7 +207,7 @@ void gui_bot_draw(gui *gui, bot *in) {
 }
 
 void gui_bot_debugDraw(gui *gui, bot *in) {
-  SDL_Rect rect_dest;  // Rectangle destination
+  SDL_Rect rect_dest; // Rectangle destination
   SDL_Surface *value =
       SDL_CreateRGBSurface(SDL_HWSURFACE, in->wSize, in->hSize, 32, 0, 0, 0, 0);
 
@@ -193,21 +241,21 @@ void gui_map_draw(gui *gui, map *in) {
       rect_dest.x = j * in->size;
       rect_dest.y = i * in->size;
       switch (in->data[i][j]) {
-        case 'D':
-          SDL_FillRect(value, NULL, MAP_D_CASE_COLOR);
-          break;
-        case ' ':
-          SDL_FillRect(value, NULL, MAP_FREE_CASE_COLOR);
-          break;
-        case 'x':
-          SDL_FillRect(value, NULL, MAP_X_CASE_COLOR);
-          break;
-        case 'S':
-          SDL_FillRect(value, NULL, MAP_S_CASE_COLOR);
-          break;
-        default:
-          SDL_FillRect(value, NULL, MAP_UNKNOWN_CASE_COLOR);
-          break;
+      case 'D':
+        SDL_FillRect(value, NULL, MAP_D_CASE_COLOR);
+        break;
+      case ' ':
+        SDL_FillRect(value, NULL, MAP_FREE_CASE_COLOR);
+        break;
+      case 'x':
+        SDL_FillRect(value, NULL, MAP_X_CASE_COLOR);
+        break;
+      case 'S':
+        SDL_FillRect(value, NULL, MAP_S_CASE_COLOR);
+        break;
+      default:
+        SDL_FillRect(value, NULL, MAP_UNKNOWN_CASE_COLOR);
+        break;
       }
 
       if (in->data[i][j] == 'x' && gui->wall != NULL) {
