@@ -1,5 +1,10 @@
 #include "bot.h"
 
+/**
+ * Permet de déplacer un robot sur une carte en gérant les deux algorithmes
+ * @param map Carte sur laquelle le robot doit ce déplacer
+ * @param in  Robot à déplacer
+ */
 void bot_move(map *map, bot *in) {
   if (in->algorithm) {
     bot_move_safe(map, in);
@@ -8,50 +13,75 @@ void bot_move(map *map, bot *in) {
   }
 }
 
+/**
+ * Déplace le robot à gauche
+ * @param in le robot à déplacer
+ */
 void bot_move_left(bot *in) {
   in->pas++;
 
   in->left = 0;
-  if (in->debug) printf("LEFT\n");
+  if (in->debug)
+    printf("LEFT\n");
   bot_pushNode(in);
   bot_pushHistory(in);
   in->x--;
 }
 
+/**
+ * Déplace le robot à droite
+ * @param in le robot à déplacer
+ */
 void bot_move_right(bot *in) {
   in->pas++;
 
   in->right = 0;
-  if (in->debug) printf("RIGHT\n");
+  if (in->debug)
+    printf("RIGHT\n");
   bot_pushNode(in);
   bot_pushHistory(in);
   in->x++;
 }
 
+/**
+ * Déplace le robot vers le haut
+ * @param in le robot à déplacer
+ */
 void bot_move_up(bot *in) {
   in->pas++;
 
   in->up = 0;
-  if (in->debug) printf("UP\n");
+  if (in->debug)
+    printf("UP\n");
   bot_pushNode(in);
   bot_pushHistory(in);
   in->y--;
 }
 
+/**
+ * Déplace le robot vers le bas
+ * @param in le robot à déplacer
+ */
 void bot_move_down(bot *in) {
   in->pas++;
 
   in->down = 0;
-  if (in->debug) printf("DOWN\n");
+  if (in->debug)
+    printf("DOWN\n");
   bot_pushNode(in);
   bot_pushHistory(in);
   in->y++;
 }
 
+/**
+ * Permet au robot de faire demi-tour
+ * @param in le robot à déplacer
+ */
 void bot_move_back(bot *in) {
   in->pas++;
 
-  if (in->debug) printf("BACK\n");
+  if (in->debug)
+    printf("BACK\n");
   in->left = 0;
   in->right = 0;
   in->up = 0;
@@ -60,11 +90,17 @@ void bot_move_back(bot *in) {
   bot_popHistory(in);
 }
 
+/**
+ * Fonction de déplacement, utilise l'algorithme de la main droite
+ * @param map Carte sur laquelle le robot doit ce déplacer
+ * @param in  Robot à déplacer
+ */
 void bot_move_normal(
     map *map,
-    bot *in) {  // si mur -> tourne à gauche sinon avance et tourne à droite
+    bot *in) { // si mur -> tourne à gauche sinon avance et tourne à droite
   bot_checkExit(in, map);
-  if (in->finished) return;
+  if (in->finished)
+    return;
 
   if (bot_historyCheck(in, in->x, in->y)) {
     in->algorithm = 1;
@@ -72,114 +108,95 @@ void bot_move_normal(
     return;
   }
 
-  int pos = bot_memory_position(in->nodes, in->x, in->y);
-
-  if (pos < 0) {
-    in->left = 1;
-    in->right = 1;
-    in->up = 1;
-    in->down = 1;
-  } else {
-    bot_memory *tmp = in->nodes;
-    in->left = tmp->left[pos];
-    in->right = tmp->right[pos];
-    in->up = tmp->up[pos];
-    in->down = tmp->down[pos];
-  }
+  bot_loadNode(in);
 
   if (!in->on_wall) {
-    switch (in->dir) {  // Avance s'il peut (et n'est pas déjà passé par la case
-                        // suivante)
-      case LEFT:
-        if (in->x > 0 && map_equals(map, in->x - 1, in->y, MAP_FREE_CASE)) {
-          bot_move_left(in);
-          return;
-        }
-        break;
-      case RIGHT:
-        if (in->x + 1 < map->w &&
-            map_equals(map, in->x + 1, in->y, MAP_FREE_CASE)) {
-          bot_move_right(in);
-          return;
-        }
-        break;
-      case UP:
-        if (in->y > 0 && map_equals(map, in->x, in->y - 1, MAP_FREE_CASE)) {
-          bot_move_up(in);
-          return;
-        }
-        break;
-      case DOWN:
-        if (in->y + 1 < map->h &&
-            map_equals(map, in->x, in->y + 1, MAP_FREE_CASE)) {
-          bot_move_down(in);
-          return;
-        }
-        break;
-      default:
-        break;
+    switch (in->dir) { // Avance s'il peut (et n'est pas déjà passé par la case
+                       // suivante)
+    case LEFT:
+      if (in->x > 0 && map_equals(map, in->x - 1, in->y, MAP_FREE_CASE)) {
+        bot_move_left(in);
+        return;
+      }
+      break;
+    case RIGHT:
+      if (in->x + 1 < map->w &&
+          map_equals(map, in->x + 1, in->y, MAP_FREE_CASE)) {
+        bot_move_right(in);
+        return;
+      }
+      break;
+    case UP:
+      if (in->y > 0 && map_equals(map, in->x, in->y - 1, MAP_FREE_CASE)) {
+        bot_move_up(in);
+        return;
+      }
+      break;
+    case DOWN:
+      if (in->y + 1 < map->h &&
+          map_equals(map, in->x, in->y + 1, MAP_FREE_CASE)) {
+        bot_move_down(in);
+        return;
+      }
+      break;
+    default:
+      break;
     }
     in->on_wall = 1;
-    if (in->debug) printf("WALL FOUND !\n");
+    if (in->debug)
+      printf("WALL FOUND !\n");
     bot_move(map, in);
   } else {
-    switch (in->dir) {  // Avance s'il peut (et n'est pas déjà passé par la case
-                        // suivante)
-      case LEFT:
-        if (in->x > 0 && map_equals(map, in->x - 1, in->y, MAP_FREE_CASE)) {
-          bot_move_left(in);
-          bot_rotate_to_right(in);
-          return;
-        }
-        break;
-      case RIGHT:
-        if (in->x + 1 < map->w &&
-            map_equals(map, in->x + 1, in->y, MAP_FREE_CASE)) {
-          bot_move_right(in);
-          bot_rotate_to_right(in);
-          return;
-        }
-        break;
-      case UP:
-        if (in->y > 0 && map_equals(map, in->x, in->y - 1, MAP_FREE_CASE)) {
-          bot_move_up(in);
-          bot_rotate_to_right(in);
-          return;
-        }
-        break;
-      case DOWN:
-        if (in->y + 1 < map->h &&
-            map_equals(map, in->x, in->y + 1, MAP_FREE_CASE)) {
-          bot_move_down(in);
-          bot_rotate_to_right(in);
-          return;
-        }
-        break;
-      default:
-        break;
+    switch (in->dir) { // Avance s'il peut (et n'est pas déjà passé par la case
+                       // suivante)
+    case LEFT:
+      if (in->x > 0 && map_equals(map, in->x - 1, in->y, MAP_FREE_CASE)) {
+        bot_move_left(in);
+        bot_rotate_to_right(in);
+        return;
+      }
+      break;
+    case RIGHT:
+      if (in->x + 1 < map->w &&
+          map_equals(map, in->x + 1, in->y, MAP_FREE_CASE)) {
+        bot_move_right(in);
+        bot_rotate_to_right(in);
+        return;
+      }
+      break;
+    case UP:
+      if (in->y > 0 && map_equals(map, in->x, in->y - 1, MAP_FREE_CASE)) {
+        bot_move_up(in);
+        bot_rotate_to_right(in);
+        return;
+      }
+      break;
+    case DOWN:
+      if (in->y + 1 < map->h &&
+          map_equals(map, in->x, in->y + 1, MAP_FREE_CASE)) {
+        bot_move_down(in);
+        bot_rotate_to_right(in);
+        return;
+      }
+      break;
+    default:
+      break;
     }
     bot_rotate_to_left(in);
   }
 }
 
+/**
+ * Fonction de déplacement, utilise un algorithme de recherche lente mais sure
+ * @param map Carte sur laquelle le robot doit ce déplacer
+ * @param in  Robot à déplacer
+ */
 void bot_move_safe(map *map, bot *in) {
   bot_checkExit(in, map);
-  if (in->finished) return;
+  if (in->finished)
+    return;
 
-  int pos = bot_memory_position(in->nodes, in->x, in->y);
-
-  if (pos < 0) {
-    in->left = 1;
-    in->right = 1;
-    in->up = 1;
-    in->down = 1;
-  } else {
-    bot_memory *tmp = in->nodes;
-    in->left = tmp->left[pos];
-    in->right = tmp->right[pos];
-    in->up = tmp->up[pos];
-    in->down = tmp->down[pos];
-  }
+  bot_loadNode(in);
 
   if (bot_nextCase_nodesCheck(in, in->x, in->y) &&
       (in->on_wall = bot_checkWall(in, map))) {
@@ -187,58 +204,71 @@ void bot_move_safe(map *map, bot *in) {
     printf("SAFE -> NORMAL\n");
   }
 
-  switch (in->dir) {  // Avance s'il peut (et n'est pas déjà passé par la case
-                      // suivante)
-    case LEFT:
-      if (in->x > 0 && map_equals(map, in->x - 1, in->y, MAP_FREE_CASE) &&
-          in->left) {
-        bot_move_left(in);
-        return;
-      } else {
-        in->left = 0;
-        if (in->x + 1 < map->w && bot_historyCheck(in, in->x + 1, in->y)) {
-          in->right = 0;
-        }
-      }
-      break;
-    case RIGHT:
+  switch (in->dir) { // Avance s'il peut (et n'est pas déjà passé par la case
+                     // suivante)
+  case LEFT:
+    if (in->x > 0 && map_equals(map, in->x - 1, in->y, MAP_FREE_CASE) &&
+        in->left) {
+      bot_move_left(in);
+      return;
+    } else {
+      in->left = 0;
       if (in->x + 1 < map->w &&
-          map_equals(map, in->x + 1, in->y, MAP_FREE_CASE) && in->right) {
-        bot_move_right(in);
-        return;
-      } else {
+          bot_historyCheck(in, in->x + 1,
+                           in->y)) { // Regarde dans sa mémoire
+                                     // si la case à droite à déjà
+                                     // été visitée
         in->right = 0;
-        if (in->x > 0 && bot_historyCheck(in, in->x - 1, in->y)) {
-          in->left = 0;
-        }
       }
-      break;
-    case UP:
-      if (in->y > 0 && map_equals(map, in->x, in->y - 1, MAP_FREE_CASE) &&
-          in->up) {
-        bot_move_up(in);
-        return;
-      } else {
-        in->up = 0;
-        if (in->y + 1 < map->h && bot_historyCheck(in, in->x, in->y + 1)) {
-          in->down = 0;
-        }
+    }
+    break;
+  case RIGHT:
+    if (in->x + 1 < map->w &&
+        map_equals(map, in->x + 1, in->y, MAP_FREE_CASE) && in->right) {
+      bot_move_right(in);
+      return;
+    } else {
+      in->right = 0;
+      if (in->x > 0 && bot_historyCheck(in, in->x - 1,
+                                        in->y)) { // Regarde dans sa mémoire
+                                                  // si la case à gauche à déjà
+                                                  // été visitée
+        in->left = 0;
       }
-      break;
-    case DOWN:
+    }
+    break;
+  case UP:
+    if (in->y > 0 && map_equals(map, in->x, in->y - 1, MAP_FREE_CASE) &&
+        in->up) {
+      bot_move_up(in);
+      return;
+    } else {
+      in->up = 0;
       if (in->y + 1 < map->h &&
-          map_equals(map, in->x, in->y + 1, MAP_FREE_CASE) && in->down) {
-        bot_move_down(in);
-        return;
-      } else {
+          bot_historyCheck(in, in->x, in->y + 1)) { // Regarde dans sa mémoire
+                                                    // si la case en bas à déjà
+                                                    // été visitée
         in->down = 0;
-        if (in->y > 0 && bot_historyCheck(in, in->x, in->y - 1)) {
-          in->up = 0;
-        }
       }
-      break;
-    default:
-      break;
+    }
+    break;
+  case DOWN:
+    if (in->y + 1 < map->h &&
+        map_equals(map, in->x, in->y + 1, MAP_FREE_CASE) && in->down) {
+      bot_move_down(in);
+      return;
+    } else {
+      in->down = 0;
+      if (in->y > 0 &&
+          bot_historyCheck(in, in->x, in->y - 1)) { // Regarde dans sa mémoire
+                                                    // si la case en haut à déjà
+                                                    // été visitée
+        in->up = 0;
+      }
+    }
+    break;
+  default:
+    break;
   }
 
   if (in->left && !bot_memory_nodesCheck(in, in->x - 1, in->y)) {
@@ -258,6 +288,13 @@ void bot_move_safe(map *map, bot *in) {
   bot_move_back(in);
 }
 
+/**
+ * Fonction de déplacement, utilise un algorithme de recherche lente mais sure
+ * algorithme de déplacement initial ne répondant pas à la consigne mais utilisé
+ * à titre de comparaison
+ * @param map Carte sur laquelle le robot doit ce déplacer
+ * @param in  Robot à déplacer
+ */
 void bot_move_4ways(map *map, bot *in) {
   int pos;
   in->left = 0;

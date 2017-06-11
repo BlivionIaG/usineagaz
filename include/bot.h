@@ -1,11 +1,11 @@
 #ifndef BOT_H
 #define BOT_H
 
+#include "extra.h"
+#include "map.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "extra.h"
-#include "map.h"
 
 #define BOT_RED_COLOR 0xFF0000
 #define BOT_NODE_COLOR 0xFF00FF
@@ -23,12 +23,12 @@ typedef struct bot_memory {
 } bot_memory;
 
 typedef struct bot {
-  int x, y, wSize, hSize, dir;        // Tailles et positions
-  int left, right, up, down;          // Directions courantes
-  bot_memory *nodes;                  // Mémoire noeuds
-  extra_coords *history;              // Historique positions
-  int historyLength;                  // Taille de l'historique
-  int on_wall, pas, debug, finished;  // Pas et fini ( bool )
+  int x, y, wSize, hSize, dir;       // Tailles et positions
+  int left, right, up, down;         // Directions courantes
+  bot_memory *nodes;                 // Mémoire noeuds
+  extra_coords *history;             // Historique positions
+  int historyLength;                 // Taille de l'historique
+  int on_wall, pas, debug, finished; // Pas et fini ( bool )
   int algorithm;
 } bot;
 
@@ -39,11 +39,12 @@ void bot_pushNode(bot *in);
 
 int bot_memory_position(bot_memory *nodes, int x, int y);
 int bot_memory_nodesCheck(bot *in, int x, int y);
+int bot_nextCase_nodesCheck(bot *in, int x, int y);
+void bot_loadNode(bot *in);
 
 void bot_pushHistory(bot *in);
 void bot_popHistory(bot *in);
 int bot_historyCheck(bot *in, int x, int y);
-int bot_nextCase_nodesCheck(bot *in, int x, int y);
 
 void bot_move(map *map, bot *in);
 void bot_move_left(bot *in);

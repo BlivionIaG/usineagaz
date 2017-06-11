@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
     interface->fin = gui_loadSprite("ressources/end.png");
     interface->sol = gui_loadSprite("ressources/floor.png");
     interface->mouvement = gui_loadSounds("ressources/mouvement.wav");
-    interface->background_music = gui_loadMusic("ressources/bgmusic.mod");
+    interface->background_music = gui_loadMusic("ressources/bgmusic.wav");
     interface->win = gui_loadMusic("ressources/win.mp3");
 
     int *allow_bot_moves = &(interface->allow_bot_moves);
