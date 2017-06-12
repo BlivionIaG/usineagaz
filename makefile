@@ -1,5 +1,5 @@
-CFLAGS = -g -Wall -Wextra -O3 -std=gnu11
-LDFLAGS = -lSDL -lSDL_image -lSDL_ttf -lSDL_mixer -lGL -lGLU
+CFLAGS = -g -Wall -Wextra -Os -std=gnu11
+LDFLAGS = -lSDL -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_gfx -lm -lGL -lGLU
 
 SRC = $(wildcard src/*.c)
 NOM = $(basename $(notdir $(SRC)))

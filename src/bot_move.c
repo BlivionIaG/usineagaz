@@ -192,14 +192,15 @@ void bot_move_normal(
  * @param in  Robot à déplacer
  */
 void bot_move_safe(map *map, bot *in) {
-  bot_checkExit(in, map);
-  if (in->finished)
+  bot_checkExit(in, map); // Vérifie si la sortie est à coté
+  if (in->finished)       // si fini, quitte
     return;
 
-  bot_loadNode(in);
+  bot_loadNode(in); // Charge la mémoire
 
   if (bot_nextCase_nodesCheck(in, in->x, in->y) &&
-      (in->on_wall = bot_checkWall(in, map))) {
+      (in->on_wall = bot_checkWall(
+           in, map))) { // Changement vers algo 1 quand dans cas très rares
     in->algorithm = 0;
     printf("SAFE -> NORMAL\n");
   }
@@ -271,6 +272,7 @@ void bot_move_safe(map *map, bot *in) {
     break;
   }
 
+  // Tourne pour se débloquer
   if (in->left && !bot_memory_nodesCheck(in, in->x - 1, in->y)) {
     bot_rotate(in, LEFT);
     return;
@@ -285,7 +287,7 @@ void bot_move_safe(map *map, bot *in) {
     return;
   }
 
-  bot_move_back(in);
+  bot_move_back(in); // Retourne en arrière
 }
 
 /**
@@ -294,6 +296,7 @@ void bot_move_safe(map *map, bot *in) {
  * à titre de comparaison
  * @param map Carte sur laquelle le robot doit ce déplacer
  * @param in  Robot à déplacer
+ * /!\ FONCTION INUTILE /!\
  */
 void bot_move_4ways(map *map, bot *in) {
   int pos;

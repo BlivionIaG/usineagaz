@@ -1,0 +1,102 @@
+101:101
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xD  x     x   x     x       x       x           x   x x       x             x   x       x     x   x x
+x x x xxx x x xxx x x xxxxx x xxxxx x xxxxxxxxx xxx x x xxxxx x xxxxxxxxxxx x x x xxxxx xxx x x x x x
+x x   x x x x   x x x x   x x     x   x       x       x     x             x x x   x   x   x x   x   x
+x xxxxx x x xxx x x x x xxx xxxxx x xxx xxxxxxxxxxx x x xxx xxxxxxxxxxxxx x x xxxxx x xxx x xxxxx x x
+x   x x   x   x   x   x   x x x   x   x x           x x   x x   x     x   x x   x   x x     x   x x x
+xxx x xxxxxxxxx xxxxxxxxx x x x xxx x x x xxxxxxxxxxx xxxxx x x xxx x x xxx x xxx xxxxx xxxxx xxx xxx
+x     x     x           x x     x   x x   x   x x         x x x x   x   x     x         x   x       x
+x xxxxxxx x x x xxxxxxxxx xxx xxxxxxx xxx xxx x x xxxxxxx x x xxx xxxxxxxxxxx x xxxxxxxxx x x xxx x x
+x x       x   x x   x     x   x     x x   x     x     x x x x   x x x     x   x           x x x   x x
+x x xxxxxxxxxxxxx x x xxx x xxx xxx x x xxx xxxxx xxx x x x xxx x x x xxx x xxxxxxx xxxxxxx x xxxxx x
+x   x   x       x x   x   x x x x x x x x x x   x   x x     x x   x   x x   x       x       x x   x x
+xxxxx x x xxxxx x x xxxxxxx x x x x x x x x x x xxxxx xxx xxx xxxxxxx x xxxxxxxxxxxxx xxxxxxxxx x x x
+x     x x   x x   x x       x   x x x x   x   x   x   x   x x     x   x           x   x   x     x x x
+x xxxxx x x x xxxxx xxxxxxxxxxx x x xxxxx xxx xxx x xxx xxx xxxxx xxx xxx xxxxxxx x xxx x xxxxxxx x x
+x   x   x x x x   x             x x       x x   x   x x x       x   x   x x       x     x         x x
+xxx x xxxxx x xxx xxxxx xxxxxxxxx xxxxx xxx x x xxxxx x x xxxxxxxxx xxxxx x xxxxx xxxxxxxxxxxxx xxx x
+x   x x     x   x x   x   x   x   x x     x   x   x   x x x   x   x     x x     x x       x   x x x x
+x xxx x xxxxxxx x xxx xxxxx x x xxx x xxx xxxxxxx x xxx x x x x x xxxxx x x xxx xxx x xxx x x x x x x
+x   x x   x   x x   x       x     x   x   x       x     x x x   x   x     x x x     x   x   x   x   x
+x x xxxxx xxx x xxx xxx xxxxxxxxx xxxxx xxxxxxxxxxxxxxxxx xxxxxxx x x xxxxx x xxxxxxxxx xxxxxxxxx xxx
+x x       x   x x       x       x x x   x   x   x       x       x x x     x   x       x x   x   x x x
+x xxxxxxxxx xxx xxxxxxx x xxxxx x x x xxxxx x x xxx xxx xxxxxxx x xxxxxxx xxxxx xxxxxxx xxx xxx x x x
+x   x     x x x       x x x     x   x x   x x x     x   x     x   x     x x   x       x         x   x
+xxx x xxx x x xxxxx xxx x x xxxxx xxx x x x x xxxxxxx x x xxx x xxx xxx x x x xxxxxxx xxx xxxxxxxxxxx
+x     x x   x   x       x x x     x x   x x x x       x x   x   x   x x   x x     x x   x x         x
+x xxxxx xxxxxxx x x xxxxx x x xxxxx xxxxx x x x xxxxxxxxxxxxx xxxxxxx xxxxx xxxxx x xxx x x xxx xxx x
+x x     x     x   x   x   x x   x         x x x     x   x     x     x       x   x   x   x x x x   x x
+x x xxxxx xxx xxxxxxx x xxx xxx xxxxx xxxxx x xxxxx xxx x xxxxx x xxxxx xxxxx xxx x x xxx x x xxx xxx
+x   x     x   x   x     x x x   x         x x     x x   x       x x   x x       x x x     x x   x   x
+xxxxx x xxx xxxxx xxxxxxx x x xxx xxx xxx x xxxxx xxx x xxxxxxxxx x x xxx xxxxx x xxxxxxx x xxx x x x
+x     x   x x x     x     x x   x x   x   x x   x   x x     x     x x   x x   x x   x       x     x x
+x xxxxxxxxx x x xxx x xxxxx xxx x x xxx xxx x x x x x xxxxx x x xxxxxxx x x x x xxx xxxxxxxxx x xxxxx
+x     x   x   x x x   x       x   x x x   x x x x x     x     x       x x   x x     x         x     x
+x xxx x x xxxxx x x xxxxxxxxx xxxxx x x x x x x xxxxx x x xxxxxxxxxxx x xxxxx xxxxx x xxxxxxx xxxxx x
+x   x   x   x   x x x         x     x x x   x x       x x x   x     x x x   x     x   x   x   x   x x
+xxxxxxxxxxx x xxx x x xxxxxxxxx xxxxx x xxxxx xxxxxxxxxxx x x x xxx x x x xxxxx x xxxxx x xxx x xxx x
+x         x x x   x   x       x x   x     x   x           x x   x   x   x       x x   x x     x     x
+x xxxxx xxx x x xxxxxxxxx xxxxx x x xxxxx x xxxxxxxxxxx xxx xxxxx xxxxxxxxxxxxxxxxx x x xxxxxxxxxxx x
+x x           x         x       x x x     x x     x   x x   x     x       x         x   x       x   x
+xxx xxxxxxxxxxxxxxxxxxx xxxxxxxxx x x xxxxxxx xxx x x x xxx x xxxxx xxxxx x xxxxxxxxxxxxx xxxxx x xxx
+x   x   x   x           x         x   x   x   x     x   x   x   x   x   x   x x         x x   x x x x
+x xxx x x x xxx xxxxxxxxx xxxxxxxxxxxxx x x xxx x xxx xxx xxxxx xxxxx x xxxxx x xxxxxxx x xxx x x x x
+x     x x x   x   x   x x x x   x   x   x x x   x   x     x     x   x x       x x     x x x   x   x x
+xxxxxxx x xxx xxx x x x x x x x x x x xxx x x xxx xxxxxxxxx xxxxx x xxxxxxx xxx x xxxxx x x x xxxxx x
+x   x x   x x x   x x   x x   x   x x   x   x   x     x   x     x x       x     x     x   x x x   x x
+xxx x xxxxx x x x x xxxxx xxxxxxxxx xxxxxxxxxxxxxxxxx x x xxx x xxxxxxxxx xxxxxxxxxxx xxxxx x xxx x x
+x     x     x x x x       x               x           x x     x x   x     x     x   x     x x     x x
+x x xxx xxxxx x x xxxxxxxxx xxxxx x xxxxx x xxxxxxxxxxx xxxxxxx x x x xxxxx xxx xxx xxxxx x xxxxxxx x
+x x   x x     x x x     x   x   x x x   x   x   x   x   x       x x x x   x   x   x       x         x
+x x xxx x x xxx x x xxx x x xxx xxx x x xxxxx x x x xxxxx xxxxxxx x x x x xxx xxx xxxxxxx xxxxxxx xxx
+x x   x   x x   x x x   x x   x     x x       x   x   x x   x   x x   x x x   x         x   x   x x x
+x xxx xxxxx x xxx x x xxxxxxx xxxxxxx xxxxxxx xxxxxxx x xxx xxx x xxxxxxx xxxxxxxxxxxxx x x x xxx x x
+x x         x x     x   x   x x   x   x     x     x   x     x   x   x               x     x     x   x
+x xxxxxxxxxxx x xxxxxxx x x x xxx x xxxxxxx xxxxx xxx x x xxx xxxxx x xxxxxxxxxxxxx x x xxxxxxx x xxx
+x         x   x x   x   x x x   x x   x   x     x x   x x x       x x   x   x       x x x     x     x
+xxxxxxxxx x xxxxx xxx xxx x xxx x xxx x x xxx x xxx xxx x x xxxxxxx xxx xxx x xxxxxxxxx x xxxxxxxxx x
+x   x     x x   x     x   x     x   x x x   x x x   x   x   x     x x     x x     x     x         x x
+x x x xxxxx x x xxxxxxx xxxxxxxxxxx x x x x xxx x xxx x xxxxx xxx x x xxx x xxx x x xxxxxxx xxxxx x x
+x x     x   x x         x     x     x x x x x     x   x       x   x x   x x     x   x x   x x   x   x
+x xxxxxxx xxx xxxxxxxxxxx xxx xxx xxxxx xxx x xxxxx xxxxxxxxxxx xxx xxxxx xxxxxxxxxxx x xxx x x xxxxx
+x         x   x         x x           x   x   x   x x       x     x     x x       x   x   x x x x   x
+xxxxx xxxxxxx x xxxxxxx xxx xxxxx xxx xxx xxxxxxx x xxxxxxx x x xxxxxxx x x xxxxx x x xxx x x x xxx x
+x   x         x x     x     x     x   x x   x     x x     x x x           x   x   x x x     x x   x x
+x x x xxxxxxxxx x xxxxxxxxxxxxxxxxx xxx xxx x xxxxx x x xxx xxxxxxxxxxx xxx xxx xxxxx x x xxx xxx x x
+x x   x         x x   x         x           x x   x x x     x       x x   x x   x     x x     x   x x
+x xxxxx xxxxxxxxx x x xxxxxxx x xxx xxxxxxxxx x x x x xxxxx x xxxxx x xxx xxx xxx xxxxx xxxxxxx xxx x
+x       x     x x   x   x     x     x   x   x   x   x x     x     x x x x   x   x x   x x x   x x   x
+xxxxxxxxx x x x xxxxx x x xxxxx xxxxx x x x xxx xxxxx xxxxxxx xxx x x x x x x x x x x x x x x x x xxx
+x x     x x x   x     x x     x   x   x x x   x     x   x     x   x   x x x x x x x x     x x   x   x
+x x xxx x x xxxxx xxxxx xxxxx xxx x xxx x xxx xxxxx x x x xxxxx xxx xxx x x x x x x xxxxxxx x xxxxx x
+x x x     x x     x   x x     x   x   x x x   x x     x x x x   x x x   x x   x   x       x x     x x
+x x xxxxxxx x xxxxxxx x xxx xxxxxxxxx xxx x xxx x xxxxx x x x xxx x x x xxxxxxxxxxxxxxxxx x xxxxx x x
+x x x   x   x x   x   x   x x   x   x   x x     x   x   x x     x     x x           x   x x   x x x x
+x x x x xxxxx x x x x xxx x x x x x x x x x xxx xxx x xxx xxx x xxxxxxxxx xxx xxxxxxx x x xxx x x x x
+x x   x x     x x   x     x   x   x x x x x x x     x     x   x   x     x x x   x     x   x   x     x
+x xxxxx x xxxxx xxxxxxx x xxxxx xxx x x x x x xxxxxxxxxxxxx xxx x x xxx x x x x x xxxxxxxxx xxxxx xxx
+x         x   x x     x x       x   x x   x x           x x   x x   x   x   x x x x       x   x   x x
+xxxxx x xxx xxx x xxx x xxxxxxxxx xxx xxxxx xxxxxxx xxx x xxx xxxxxxx xxxxx x xxx x xxxxx xxx xxxxx x
+x   x x   x     x   x   x       x   x   x         x   x x       x   x   x   x     x     x   x   x   x
+x x x xxx xxxxxxxxx xxxxxxx xxx xxx xxxxx xxxxxxxxxxxxx xxxxx x x x xxx x xxxxxxxxx xxx xxxxx x x xxx
+x x x   x x         x       x x   x x     x   x     x   x   x x x x x   x   x     x x x   x   x x   x
+x x xxxxx xxxxx xxxxx xxxxxxx xxx xxx xxx x x x xxx x xxx x xxx xxx x xxxxxxx xxx x x x x x xxx x x x
+x x   x   x   x     x       x x x       x x x   x     x   x   x     x   x   x x   x   x x   x   x x x
+xxxxx x x x x xxxxxxxxxxxxx x x xxxxxxxxx xxx xxxxxxxxx xxx x xxxxxxxxx x x xxx xxxxxxxxxxxxx xxxxx x
+x     x x   x x             x x x     x   x     x   x x   x x       x   x x x   x   x       x x   x x
+x xxxxxxxxxxx x xxxxxxxxxxxxx x xxx x x xxx xxxxx x x xxx xxxxxxxxx x xxxxx x xxx x x xxxxx x x x x x
+x x       x x x       x   x x x     x   x   x   x x x     x     x   x       x x   x x     x   x x x x
+x x xxxxx x x xxxxxxxxx x x x x xxxxxxxxx xxx x xxx xxxxxxx x x x xxxxxxxxx x x x x xxxxx x xxxxx x x
+x x x   x         x     x     x x         x   x     x   x   x x x x         x   x x       x         x
+x x x xxxxx xxxxxxx xxxxxxxxx x x xxxxxxx x xxxxxxx x x x xxx xxx x xxxxxxx x xxxxxxxxxxxxxxxxxxx xxx
+x x x     x x   x           x   x x x     x   x   x   x   x x x   x   x   x x x     x     x x     x x
+x xxx xxx x x x x x xxx xxx xxxxx x x xxxxxxx xxx xxxxxxxxx x x xxx xxx x x x xxxxx x xxx x x xxxxx x
+x     x x   x x   x   x   x       x x     x   x   x   x       x   x     x x x       x x x     x     x
+x xxxxx xxxxxxxxxxxxxxxxx xxxxx xxx xxxxx x xxx xxx x xxxxx xxxxx xxxxxxxxx xxxxxxxxx x x xxxxx xxx x
+x x   x   x     x         x     x       x     x   x x     x x   x         x   x   x   x x   x x   x x
+x xxx xxx x xxx xxx xxxxxxx xxxxxxx x x xxx x xxx x xxxxx x xxx xxxxxxxxx xxx xxx x xxx xxx x xxxxx x
+x x   x x   x x   x     x x x     x x x   x x x x   x x     x   x       x   x x     x   x     x   x x
+x x xxx xxxxx xxx x xxx x x x xxx x x xxx xxx x xxxxx x x xxx xxx xxx xxxxx x x xxx x xxxxx x x x x x
+x               x   x   x   x   x   x   x     x         x         x       x   x   x   x     x   x  Sx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
