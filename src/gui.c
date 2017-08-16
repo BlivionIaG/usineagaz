@@ -30,7 +30,7 @@ gui *gui_init(int w, int h, int r, int g, int b, int disableISO, char *title) {
     return NULL;
   }
 
-  out->screen = SDL_SetVideoMode(w, h, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+  out->screen = SDL_SetVideoMode(w, h, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE );
   if (out->screen == NULL) {
     fprintf(stderr, "Impossible to set Video Mode %s\n :", SDL_GetError());
     return NULL;

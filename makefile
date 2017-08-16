@@ -16,7 +16,7 @@ obj/%.o: src/%.c
 	gcc -c $< -Iinclude -o $@ $(CFLAGS)
 
 clean:
-	rm obj/*.o *.out *.gch -f
+	rm obj/*.o *.bin *.gch -f
 
 clear:
 	rm obj/*.o *.gch -f
